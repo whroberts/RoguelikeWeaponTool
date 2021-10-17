@@ -15,12 +15,17 @@ public class WeaponCreationWindow : EditorWindow
     Rect _pistolSection;
     Rect[] _baseSections;
 
-    static PistolData _pistolData;
+    //most important
+    static TempData _tempData;
+    static EmptyDataSet _emptyData;
+    public static TempData TempInfo { get { return _tempData; } }
+    public static EmptyDataSet EmptyInfo { get { return _emptyData; } }
 
+    //rest
+    static PistolData _pistolData;
     public static PistolData PistolInfo { get { return _pistolData; } }
 
     [MenuItem("Window/Weapon Designer")]
-
     static void OpenWindow()
     {
         WeaponCreationWindow window = (WeaponCreationWindow)GetWindow(typeof(WeaponCreationWindow));
@@ -35,6 +40,8 @@ public class WeaponCreationWindow : EditorWindow
     private static void InitData()
     {
         _pistolData = (PistolData)CreateInstance(typeof(PistolData));
+        _tempData = (TempData)CreateInstance(typeof(TempData));
+        _emptyData = (EmptyDataSet)CreateInstance(typeof(EmptyDataSet));
     }
 
     /// <summary>
@@ -54,6 +61,7 @@ public class WeaponCreationWindow : EditorWindow
     {
         DrawBaseSections();
         DrawHeaderSection();
+        //DrawInitialMenu();
         DrawPistolSection();
     }
 
@@ -89,6 +97,35 @@ public class WeaponCreationWindow : EditorWindow
         GUILayout.EndArea();
     }
 
+    void DrawInitialMenu()
+    {
+        GUILayout.BeginArea(_pistolSection);
+        // {
+
+        GUILayout.Label("Pistol");
+        GUILayout.Space(5);
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Damage");
+        _tempData._weaponType = (WeaponType)EditorGUILayout.EnumPopup(_tempData._weaponType);
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Weapon");
+        _tempData._fireType = (FireType)EditorGUILayout.EnumPopup(_tempData._fireType);
+        EditorGUILayout.EndHorizontal();
+
+        GUILayout.Space(5);
+
+        CreateButtons(WeaponType.PISTOL);
+
+        // }
+        GUILayout.EndArea();
+    }
+
+    
     void DrawPistolSection()
     {
         GUILayout.BeginArea(_pistolSection);
@@ -116,6 +153,7 @@ public class WeaponCreationWindow : EditorWindow
         // }
         GUILayout.EndArea();
     }
+    
 
     void CreateButtons(WeaponType weaponType)
     {
