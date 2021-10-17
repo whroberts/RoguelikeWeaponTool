@@ -8,9 +8,6 @@ public class LoadWindow : EditorWindow
 {
     static LoadWindow _window;
 
-    private bool isConfirmed = false;
-    public bool IsConfirmed => isConfirmed;
-
     public static void OpenLoadWindow()
     {
         _window = (LoadWindow)GetWindow(typeof(LoadWindow));
@@ -26,6 +23,10 @@ public class LoadWindow : EditorWindow
 
     private void DrawLoadWindow()
     {
-
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Load Data");
+        //weaponData._basePrefab = EditorGUILayout.ObjectField(weaponData._basePrefab, typeof(GameObject), false);
+        //_loadedDataSet = (ScriptableObject) EditorGUILayout.ObjectField(_loadedDataSet, typeof(ScriptableObject), false);
+        EditorGUILayout.EndHorizontal();
     }
 }

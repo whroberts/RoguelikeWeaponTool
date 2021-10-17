@@ -12,18 +12,12 @@ public class WeaponCreationWindow : EditorWindow
     Texture2D[] _textures;
 
     Rect _headerSection;
-    Rect _pistolSection;
+    Rect _creationSection;
     Rect[] _baseSections;
 
-    //most important
-    static TempData _tempData;
-    static EmptyDataSet _emptyData;
-    public static TempData TempInfo { get { return _tempData; } }
-    public static EmptyDataSet EmptyInfo { get { return _emptyData; } }
+    static WeaponData _weaponData;
+    public static WeaponData WeaponData { get { return _weaponData; } }
 
-    //rest
-    static PistolData _pistolData;
-    public static PistolData PistolInfo { get { return _pistolData; } }
 
     [MenuItem("Window/Weapon Designer")]
     static void OpenWindow()
@@ -37,11 +31,10 @@ public class WeaponCreationWindow : EditorWindow
         InitSectionVisuals();
         InitData();
     }
+    
     private static void InitData()
     {
-        _pistolData = (PistolData)CreateInstance(typeof(PistolData));
-        _tempData = (TempData)CreateInstance(typeof(TempData));
-        _emptyData = (EmptyDataSet)CreateInstance(typeof(EmptyDataSet));
+        _weaponData = (WeaponData)CreateInstance(typeof(WeaponData));
     }
 
     /// <summary>
@@ -54,15 +47,14 @@ public class WeaponCreationWindow : EditorWindow
         _pistolSectionTexture = Resources.Load<Texture2D>("icons/redOrange");
 
         _textures = new Texture2D[] { _headerSectionTexture, _pistolSectionTexture };
-        _baseSections = new Rect[] { _headerSection, _pistolSection};
+        _baseSections = new Rect[] { _headerSection, _creationSection};
     }
 
     private void OnGUI()
     {
         DrawBaseSections();
         DrawHeaderSection();
-        //DrawInitialMenu();
-        DrawPistolSection();
+        DrawCreationSection();
     }
 
     void DrawBaseSections()
@@ -86,7 +78,7 @@ public class WeaponCreationWindow : EditorWindow
         }
 
         _headerSection = _baseSections[0];
-        _pistolSection = _baseSections[1];
+        _creationSection = _baseSections[1];
     }
     void DrawHeaderSection()
     {
@@ -97,73 +89,44 @@ public class WeaponCreationWindow : EditorWindow
         GUILayout.EndArea();
     }
 
-    void DrawInitialMenu()
+    void DrawCreationSection()
     {
-        GUILayout.BeginArea(_pistolSection);
-        // {
+        GUILayout.BeginArea(_creationSection);
 
-        GUILayout.Label("Pistol");
+        GUILayout.Label("Create New Weapon");
         GUILayout.Space(5);
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Damage");
-        _tempData._weaponType = (WeaponType)EditorGUILayout.EnumPopup(_tempData._weaponType);
+        GUILayout.Label("Weapon Base Class");
+        _weaponData._baseWeaponClass = (BaseWeaponClass)EditorGUILayout.EnumPopup(_weaponData._baseWeaponClass);
         EditorGUILayout.EndHorizontal();
 
         GUILayout.Space(5);
 
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Weapon");
-        _tempData._fireType = (FireType)EditorGUILayout.EnumPopup(_tempData._fireType);
-        EditorGUILayout.EndHorizontal();
+        CreateButtons();
 
-        GUILayout.Space(5);
-
-        CreateButtons(WeaponType.PISTOL);
-
-        // }
-        GUILayout.EndArea();
-    }
-
-    
-    void DrawPistolSection()
-    {
-        GUILayout.BeginArea(_pistolSection);
-        // {
-
-        GUILayout.Label("Pistol");
-        GUILayout.Space(5);
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Damage");
-        _pistolData._weaponType = (WeaponType)EditorGUILayout.EnumPopup(_pistolData._weaponType);
-        EditorGUILayout.EndHorizontal();
-
-        GUILayout.Space(5);
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Weapon");
-        _pistolData._fireType = (FireType)EditorGUILayout.EnumPopup(_pistolData._fireType);
-        EditorGUILayout.EndHorizontal();
-
-        GUILayout.Space(5);
-
-        CreateButtons(WeaponType.PISTOL);
-
-        // }
         GUILayout.EndArea();
     }
     
 
-    void CreateButtons(WeaponType weaponType)
+    void CreateButtons()
     {
         EditorGUILayout.BeginVertical();
 
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Create", GUILayout.Height(40)))
+        if (GUILayout.Button("Create New", GUILayout.Height(40)))
         {
             AssetDatabase.Refresh();
-            SetupWindow.OpenSetupWindow(weaponType);
+            
+            switch (_weaponData._baseWeaponClass)
+            {
+                case BaseWeaponClass.GUN:
+                    GunSetupWindow.OpenGunSetupWindow();
+                    break;
+                case BaseWeaponClass.MAGIC:
+                    MagicSetupWindow.OpenMagicSetupWindow();
+                    break;
+            }
         }
         EditorGUILayout.EndHorizontal();
 
