@@ -121,7 +121,7 @@ public class MagicSetupWindow : EditorWindow
         {
             if (_isSaveable)
             {
-                SaveWeaponData();
+                CreateNewDataSet();
 
                 _isSaved = true;
                 _window.Close();
@@ -132,7 +132,9 @@ public class MagicSetupWindow : EditorWindow
             if (_isSaveable)
             {
                 _isSaved = true;
-                SaveWeaponData();
+                CreateNewDataSet();
+                MagicEditWindow.OpenMagicEditWindow(_magicBaseData);
+                _window.Close();
             }
         }
 
@@ -148,7 +150,7 @@ public class MagicSetupWindow : EditorWindow
         EditorGUILayout.EndVertical();
     }
 
-    void SaveWeaponData()
+    void CreateNewDataSet()
     {
         string prefabPath; // path to the base prefab
         string newPrefabPath = "Assets/Prefabs/CreatedWeapons/Magic/";

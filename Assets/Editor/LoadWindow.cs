@@ -84,7 +84,12 @@ public class LoadWindow : EditorWindow
                     break;
                 case BaseWeaponClass.MAGIC:
 
-                    MagicSetupWindow.OpenMagicSetupWindow();
+                    if (_loadedMagicBaseData != null)
+                    {
+                        MagicEditWindow.OpenMagicEditWindow(_loadedMagicBaseData);
+                        _window.Close();
+                    }
+
                     break;
             }
         }
