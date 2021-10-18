@@ -25,6 +25,7 @@ public class WeaponCreationWindow : EditorWindow
         window.minSize = new Vector2(600, 300);
         window.Show();
     }
+
     private void OnEnable()
     {
         InitSectionVisuals();

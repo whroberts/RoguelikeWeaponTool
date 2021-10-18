@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Heal : MagicBase
 {
-    protected override void Magic()
+    protected override void CastMagic()
     {
         throw new System.NotImplementedException();
     }

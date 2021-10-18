@@ -7,7 +7,7 @@ using Types;
 public class MagicSetupWindow : EditorWindow
 {
     private bool _createNewDataSet = true;
-    private bool _createNewPrefab = false;
+    private bool _createNewPrefab = true;
     private bool _isSaved = false;
     private bool _isSaveable = false;
 
@@ -21,16 +21,7 @@ public class MagicSetupWindow : EditorWindow
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
-
-        if (LoadWindow.LoadedGunBaseData == null)
-        {
-            _magicBaseData = (MagicBaseData)CreateInstance(typeof(MagicBaseData));
-        }
-        else
-        {
-            _magicBaseData = LoadWindow.LoadedMagicBaseData;
-        }
-
+        _magicBaseData = (MagicBaseData)CreateInstance(typeof(MagicBaseData));
         _magicBaseData._baseWeaponClass = BaseWeaponClass.MAGIC;
     }
 
@@ -187,7 +178,7 @@ public class MagicSetupWindow : EditorWindow
                     if (!newPrefab.GetComponent<Damage>())
                     {
                         newPrefab.AddComponent(typeof(Damage));
-                        newPrefab.GetComponent<Damage>()._magicBaseData = _magicBaseData;
+                        newPrefab.GetComponent<Damage>().MagicBaseData = _magicBaseData;
                     }
 
                     break;
@@ -196,7 +187,7 @@ public class MagicSetupWindow : EditorWindow
                     if (!newPrefab.GetComponent<Heal>())
                     {
                         newPrefab.AddComponent(typeof(Heal));
-                        newPrefab.GetComponent<Heal>()._magicBaseData = _magicBaseData;
+                        newPrefab.GetComponent<Heal>().MagicBaseData = _magicBaseData;
                     }
 
                     break;

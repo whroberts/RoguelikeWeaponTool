@@ -6,6 +6,6 @@ public class Pistol : GunBase
 {
     protected override void Shoot()
     {
-        //throw new System.NotImplementedException();
+        throw new System.NotImplementedException();
     }
 }

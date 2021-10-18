@@ -11,7 +11,7 @@ using System;
 public class GunSetupWindow : EditorWindow
 {
     private bool _createNewDataSet = true;
-    private bool _createNewPrefab = false;
+    private bool _createNewPrefab = true;
     private bool _isSaved = false;
     private bool _isSaveable = false;
 

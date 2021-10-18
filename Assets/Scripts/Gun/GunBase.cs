@@ -15,6 +15,7 @@ public abstract class GunBase : MonoBehaviour
 
     [Header("Standard Effects")]
     [SerializeField] ParticleSystem _muzzleFlash = null;
+    AudioSource _audioSource;
 
     protected float _timeOfLastShot = 0;
     protected bool _canHoldTrigger = false;
