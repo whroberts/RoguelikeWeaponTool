@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Pistol : GunBase
 {
-    protected override void Gun()
+    protected override void Shoot()
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

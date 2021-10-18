@@ -183,7 +183,7 @@ public class GunSetupWindow : EditorWindow
                     if (!newPrefab.GetComponent<Pistol>())
                     {
                         newPrefab.AddComponent(typeof(Pistol));
-                        newPrefab.GetComponent<Pistol>()._gunBaseData = _gunBaseData;
+                        newPrefab.GetComponent<Pistol>().GunDataSet = _gunBaseData;
                     }
 
                     break;
@@ -192,7 +192,7 @@ public class GunSetupWindow : EditorWindow
                     if (!newPrefab.GetComponent<Rifle>())
                     {
                         newPrefab.AddComponent(typeof(Rifle));
-                        newPrefab.GetComponent<Rifle>()._gunBaseData = _gunBaseData;
+                        newPrefab.GetComponent<Rifle>().GunDataSet = _gunBaseData;
                     }
 
                     break;
