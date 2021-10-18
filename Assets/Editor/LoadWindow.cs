@@ -77,7 +77,7 @@ public class LoadWindow : EditorWindow
 
                     if (_loadedGunBaseData != null)
                     {
-                        GunEditWindow.OpenGunEditWindow();
+                        GunEditWindow.OpenGunEditWindow(_loadedGunBaseData);
                         _window.Close();
                     }
 

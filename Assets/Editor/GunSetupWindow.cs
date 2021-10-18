@@ -127,7 +127,7 @@ public class GunSetupWindow : EditorWindow
             {
                 _isSaved = true;
                 CreateNewWeaponData();
-                GunEditWindow.OpenGunEditWindow();
+                GunEditWindow.OpenGunEditWindow(_gunBaseData);
                 _window.Close();
             }
         }

@@ -17,4 +17,4 @@ MonoBehaviour:
   _gunFireType: 0
   _basePrefab: {fileID: 5646643437134830900, guid: 45a378b72e65d5a40b1a9ccf2ac29a84, type: 3}
   _name: a
-  _damage: 5
+  _damage: 1

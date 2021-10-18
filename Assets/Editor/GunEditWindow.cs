@@ -24,24 +24,15 @@ public class GunEditWindow : EditorWindow
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
-
-        if (GunSetupWindow.CurrentGunBase != null)
-        {
-            CreateSaveFileFrom(GunSetupWindow.CurrentGunBase);
-            _originalName = GunSetupWindow.CurrentGunBase._name;
-        }
-        else if (LoadWindow.LoadedGunBaseData != null)
-        {
-            CreateSaveFileFrom(LoadWindow.LoadedGunBaseData);
-            _originalName = LoadWindow.LoadedGunBaseData._name;
-        }
+        CreateSaveFileFrom(_savedGunData);
     }
 
-    public static void OpenGunEditWindow()
+    public static void OpenGunEditWindow(GunBaseData importData)
     {
+        _savedGunData = importData;
         _window = (GunEditWindow)GetWindow(typeof(GunEditWindow));
-        _window.titleContent = new GUIContent("Edit Gun");
         _window.minSize = new Vector2(300, 300);
+        _window.hasUnsavedChanges = true;
         _window.Show();
     }
 
@@ -147,7 +138,7 @@ public class GunEditWindow : EditorWindow
         _unsavedGunData._baseGunType = gunData._baseGunType;
         _unsavedGunData._gunFireType = gunData._gunFireType;
         _unsavedGunData._basePrefab = gunData._basePrefab;
-        _unsavedGunData._name = "(notSaved)" + gunData._name;
+        _unsavedGunData._name = "tmp_" + gunData._name;
         _unsavedGunData._damage = gunData._damage;
 
         AssetDatabase.CreateAsset(_unsavedGunData, tempPath + _unsavedGunData._name + ".asset");
@@ -175,9 +166,31 @@ public class GunEditWindow : EditorWindow
         AssetDatabase.Refresh();
     }
 
-    void IsValueDirty(GunBaseData saved, GunBaseData unsaved)
+    bool IsFileDirty()
     {
+        bool dirty = false;
 
+        if (_unsavedGunData._baseGunType != _savedGunData._baseGunType)
+        {
+            dirty = true;
+        }
+
+        if (_unsavedGunData._gunFireType != _savedGunData._gunFireType)
+        {
+            dirty = true;
+        }
+
+        if (_unsavedGunData._basePrefab != _savedGunData._basePrefab)
+        {
+            dirty = true;
+        }
+
+        if (_unsavedGunData._damage != _savedGunData._damage)
+        {
+            dirty = true;
+        }
+
+        return dirty;
     }
 
     private void OnDestroy()
