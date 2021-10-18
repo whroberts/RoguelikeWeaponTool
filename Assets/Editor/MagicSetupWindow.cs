@@ -14,14 +14,24 @@ public class MagicSetupWindow : EditorWindow
     static MagicSetupWindow _window;
 
     static MagicBaseData _magicBaseData;
-    public static MagicBaseData NewMagicBase { get { return _magicBaseData; } }
+    public static MagicBaseData CurrentMagicBase { get { return _magicBaseData; } }
 
     PopUpWindow _popUpWindow;
 
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
-        _magicBaseData = (MagicBaseData)CreateInstance(typeof(MagicBaseData));
+
+        if (LoadWindow.LoadedGunBaseData == null)
+        {
+            _magicBaseData = (MagicBaseData)CreateInstance(typeof(MagicBaseData));
+        }
+        else
+        {
+            _magicBaseData = LoadWindow.LoadedMagicBaseData;
+        }
+
+        _magicBaseData._baseWeaponClass = BaseWeaponClass.MAGIC;
     }
 
     public static void OpenMagicSetupWindow()
@@ -40,12 +50,12 @@ public class MagicSetupWindow : EditorWindow
     void DrawMagicSetupWindow()
     {
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Base Gun");
+        GUILayout.Label("Base Type");
         _magicBaseData._baseMagicType = (BaseMagicType)EditorGUILayout.EnumPopup(_magicBaseData._baseMagicType);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Gun Fire Type");
+        GUILayout.Label("Magic Fire Type");
         _magicBaseData._magicFireType = (MagicFireType)EditorGUILayout.EnumPopup(_magicBaseData._magicFireType);
         EditorGUILayout.EndHorizontal();
 

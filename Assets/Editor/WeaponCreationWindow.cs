@@ -18,7 +18,6 @@ public class WeaponCreationWindow : EditorWindow
     static WeaponData _weaponData;
     public static WeaponData WeaponData { get { return _weaponData; } }
 
-
     [MenuItem("Window/Weapon Designer")]
     static void OpenWindow()
     {
@@ -103,17 +102,17 @@ public class WeaponCreationWindow : EditorWindow
 
         GUILayout.Space(5);
 
-        CreateButtons();
+        DrawButtons();
 
         GUILayout.EndArea();
     }
     
 
-    void CreateButtons()
+    void DrawButtons()
     {
         EditorGUILayout.BeginVertical();
-
         EditorGUILayout.BeginHorizontal();
+
         if (GUILayout.Button("Create New", GUILayout.Height(40)))
         {
             AssetDatabase.Refresh();

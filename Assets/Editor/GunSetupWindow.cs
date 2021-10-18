@@ -14,14 +14,24 @@ public class GunSetupWindow : EditorWindow
     static GunSetupWindow _window;
 
     static GunBaseData _gunBaseData;
-    public static GunBaseData NewGunBase { get { return _gunBaseData; } }
+    public static GunBaseData CurrentGunBase { get { return _gunBaseData; } }
 
     PopUpWindow _popUpWindow;
 
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
-        _gunBaseData = (GunBaseData)CreateInstance(typeof(GunBaseData));
+
+        if (LoadWindow.LoadedGunBaseData == null)
+        {
+            _gunBaseData = (GunBaseData)CreateInstance(typeof(GunBaseData));
+        } 
+        else
+        {
+            _gunBaseData = LoadWindow.LoadedGunBaseData;
+        }
+
+        _gunBaseData._baseWeaponClass = BaseWeaponClass.GUN;
     }
 
     public static void OpenGunSetupWindow()
