@@ -24,15 +24,17 @@ public class GunEditWindow : EditorWindow
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
+
         CreateSaveFileFrom(_savedGunData);
+        _originalName = _savedGunData._name;
     }
 
     public static void OpenGunEditWindow(GunBaseData importData)
     {
         _savedGunData = importData;
         _window = (GunEditWindow)GetWindow(typeof(GunEditWindow));
+        _window.titleContent = new GUIContent(importData._name);
         _window.minSize = new Vector2(300, 300);
-        _window.hasUnsavedChanges = true;
         _window.Show();
     }
 
