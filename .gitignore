@@ -12,7 +12,6 @@
 
 # IgnorePhotoshop Assets
 /[Pp]hotoshop[Ff]iles/
-/[Pp]hotoshop[Ff]iles/*.meta/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
