@@ -35,9 +35,11 @@ public class LoadWindow : EditorWindow
 
     private void DrawLoadWindow()
     {
+        EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Load Data Set");
         _weaponData = (WeaponData) EditorGUILayout.ObjectField(_weaponData, typeof(WeaponData), false);
+        EditorGUILayout.EndHorizontal();
 
         if (_weaponData != null)
         {
@@ -50,8 +52,10 @@ public class LoadWindow : EditorWindow
                 _loadedMagicBaseData = (MagicBaseData)_weaponData;
             }
         }
+        else 
+            EditorGUILayout.HelpBox("[Data Set] Required", MessageType.Error);
 
-        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space(5);
 
@@ -71,7 +75,12 @@ public class LoadWindow : EditorWindow
             {
                 case BaseWeaponClass.GUN:
 
-                    GunSetupWindow.OpenGunSetupWindow();
+                    if (_loadedGunBaseData != null)
+                    {
+                        GunEditWindow.OpenGunEditWindow();
+                        _window.Close();
+                    }
+
                     break;
                 case BaseWeaponClass.MAGIC:
 

@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03e79373e76ec2b41beb203a94e161b5, type: 3}
-  m_Name: TestHoldHeal
+  m_Script: {fileID: 11500000, guid: 8294c91775ba8d74fbd1691cbf35978f, type: 3}
+  m_Name: a
   m_EditorClassIdentifier: 
-  _baseWeaponClass: 1
-  _baseMagicType: 1
-  _magicFireType: 1
+  _baseWeaponClass: 0
+  _baseGunType: 0
+  _gunFireType: 0
   _basePrefab: {fileID: 5646643437134830900, guid: 45a378b72e65d5a40b1a9ccf2ac29a84, type: 3}
-  _name: TestHoldHeal
-  _damage: 0
+  _name: a
+  _damage: 5

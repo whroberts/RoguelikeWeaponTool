@@ -7,7 +7,7 @@ using Types;
 public class MagicSetupWindow : EditorWindow
 {
     private bool _createNewDataSet = true;
-    private bool _createNewPrefab = true;
+    private bool _createNewPrefab = false;
     private bool _isSaved = false;
     private bool _isSaveable = false;
 

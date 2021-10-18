@@ -1,35 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 using UnityEditor;
+using UnityEditor.Events;
 using Types;
+using System;
 
 public class GunSetupWindow : EditorWindow
 {
     private bool _createNewDataSet = true;
-    private bool _createNewPrefab = true;
+    private bool _createNewPrefab = false;
     private bool _isSaved = false;
     private bool _isSaveable = false;
 
     static GunSetupWindow _window;
-
     static GunBaseData _gunBaseData;
     public static GunBaseData CurrentGunBase { get { return _gunBaseData; } }
 
     PopUpWindow _popUpWindow;
 
+    public event Action Check = delegate { };
+
     private void OnEnable()
     {
         _popUpWindow = CreateInstance<PopUpWindow>();
-
-        if (LoadWindow.LoadedGunBaseData == null)
-        {
-            _gunBaseData = (GunBaseData)CreateInstance(typeof(GunBaseData));
-        } 
-        else
-        {
-            _gunBaseData = LoadWindow.LoadedGunBaseData;
-        }
+        _gunBaseData = (GunBaseData)CreateInstance(typeof(GunBaseData));
 
         _gunBaseData._baseWeaponClass = BaseWeaponClass.GUN;
     }
@@ -120,9 +117,7 @@ public class GunSetupWindow : EditorWindow
         {
             if (_isSaveable)
             {
-                SaveWeaponData();
-
-                _isSaved = true;
+                CreateNewWeaponData();
                 _window.Close();
             }
         }
@@ -131,7 +126,9 @@ public class GunSetupWindow : EditorWindow
             if (_isSaveable)
             {
                 _isSaved = true;
-                SaveWeaponData();
+                CreateNewWeaponData();
+                GunEditWindow.OpenGunEditWindow();
+                _window.Close();
             }
         }
 
@@ -141,13 +138,13 @@ public class GunSetupWindow : EditorWindow
         }
         else if (_popUpWindow.IsConfirmed)
         {
-            _window.Close();
+            //_window.Close();
         }
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
     }
 
-    void SaveWeaponData()
+    void CreateNewWeaponData()
     {
         string prefabPath; // path to the base prefab
         string newPrefabPath = "Assets/Prefabs/CreatedWeapons/Guns/";
@@ -204,5 +201,10 @@ public class GunSetupWindow : EditorWindow
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+    }
+
+    private void OnDestroy()
+    {
+        _gunBaseData = null;
     }
 }
