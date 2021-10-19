@@ -5,10 +5,12 @@ using UnityEngine;
 using Types;
 
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(ParticleSystem))]
 [RequireComponent(typeof(GunBase))]
 public abstract class MagicBase : MonoBehaviour
 {
     protected abstract void CastMagic();
+    protected abstract void EquipAbility();
 
     public MagicBaseData MagicBaseData;
     protected MagicBaseData _magicBaseData;
@@ -28,41 +30,19 @@ public abstract class MagicBase : MonoBehaviour
     protected float _accuracy = 100;
     protected float _bulletTravelSpeed = 10;
 
-    private void Start()
+    private void Awake()
     {
         if (MagicBaseData != null)
         {
             _magicBaseData = MagicBaseData;
             InitDataFromSet();
+            EquipAbility();
         }
     }
 
     private void Update()
     {
-        if (!_canHoldToCast)
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
-                {
-                    _timeOfLastAbilityUse = Time.time;
-                    CastMagic();
-                    MuzzleFeedback();
-                }
-            }
-        }
-        else if (_canHoldToCast)
-        {
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
-                {
-                    _timeOfLastAbilityUse = Time.time;
-                    CastMagic();
-                    MuzzleFeedback();
-                }
-            }
-        }
+        CanUseMagicCheck();
     }
 
     void InitDataFromSet()
@@ -88,6 +68,34 @@ public abstract class MagicBase : MonoBehaviour
         _accuracy = _magicBaseData._accuracy;
         _bulletTravelSpeed = _magicBaseData._abilityTravelSpeed;
         _timeOfLastAbilityUse = Time.time;
+    }
+
+    void CanUseMagicCheck()
+    {
+        if (!_canHoldToCast)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
+                {
+                    _timeOfLastAbilityUse = Time.time;
+                    CastMagic();
+                    MuzzleFeedback();
+                }
+            }
+        }
+        else if (_canHoldToCast)
+        {
+            if (Input.GetKey(KeyCode.Mouse1))
+            {
+                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
+                {
+                    _timeOfLastAbilityUse = Time.time;
+                    CastMagic();
+                    MuzzleFeedback();
+                }
+            }
+        }
     }
 
     protected void CurrentStats()

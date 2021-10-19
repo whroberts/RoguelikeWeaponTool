@@ -8,4 +8,9 @@ public class Pistol : GunBase
     {
         throw new System.NotImplementedException();
     }
+
+    protected override void EquipWeapon()
+    {
+        throw new System.NotImplementedException();
+    }
 }

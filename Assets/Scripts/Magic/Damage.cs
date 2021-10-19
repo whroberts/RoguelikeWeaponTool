@@ -8,4 +8,9 @@ public class Damage : MagicBase
     {
         throw new System.NotImplementedException();
     }
+
+    protected override void EquipAbility()
+    {
+        throw new System.NotImplementedException();
+    }
 }
