@@ -216,9 +216,8 @@ public class GunSetupWindow : EditorWindow
                     break;
                 case BaseGunType.RIFLE:
 
-                    if (!newPrefab.GetComponent<Rifle>())
+                    if (newPrefab.GetComponent<Rifle>())
                     {
-                        newPrefab.AddComponent(typeof(Rifle));
                         newPrefab.GetComponent<Rifle>().GunDataSet = _gunBaseData;
                     }
 

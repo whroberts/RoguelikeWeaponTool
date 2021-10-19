@@ -11,11 +11,15 @@ public abstract class GunBase : MonoBehaviour
     protected abstract void EquipWeapon();
 
     public GunBaseData GunDataSet;
+    protected GunBaseData _gunDataSet => GunDataSet;
 
-    protected GunBaseData _gunDataSet;
+    public GameObject CurrentWeapon;
+    protected GameObject _currentWeapon => CurrentWeapon;
 
-    [Header("Standard Effects")]
+    [Header("Header")]
     [SerializeField] ParticleSystem _muzzleFlash = null;
+    [SerializeField] protected Transform _muzzleLocation = null;
+
     AudioSource _audioSource;
 
     protected float _timeOfLastShot = 0;
@@ -32,11 +36,10 @@ public abstract class GunBase : MonoBehaviour
     // for recoil
     protected float _recoil = 0;
 
-    private void Awake()
+    private void Start()
     {
         if (GunDataSet != null)
         {
-            _gunDataSet = GunDataSet;
             InitDataFromSet();
             EquipWeapon();
         }

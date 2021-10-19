@@ -6,10 +6,10 @@ public class Rifle : GunBase
 {
     protected override void Shoot()
     {
-        throw new System.NotImplementedException();
+
     }
     protected override void EquipWeapon()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Pistol : GunBase
 {
+    [Header("Bullet Prefab")]
+    [SerializeField] Bullet _bullet = null;
+
     protected override void Shoot()
     {
-        throw new System.NotImplementedException();
+        Instantiate(_bullet, _muzzleLocation, false);
     }
 
     protected override void EquipWeapon()
     {
-        throw new System.NotImplementedException();
+
     }
 }
