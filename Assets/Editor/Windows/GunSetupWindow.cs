@@ -56,16 +56,34 @@ public class GunSetupWindow : EditorWindow
         _gunBaseData._gunFireType = (GunFireType)EditorGUILayout.EnumPopup(_gunBaseData._gunFireType);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Recoil Type");
+        _gunBaseData._recoilType = (RecoilType)EditorGUILayout.EnumPopup(_gunBaseData._recoilType);
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
+
         GUILayout.Label("Base Prefab");
+
         _gunBaseData._basePrefab = EditorGUILayout.ObjectField(_gunBaseData._basePrefab, typeof(GameObject), false);
+
         EditorGUILayout.EndHorizontal();
 
         if (_gunBaseData._basePrefab == null)
         {
-            EditorGUILayout.HelpBox("This needs a [Prefab] before it can be created.", MessageType.Error);
+            EditorGUILayout.HelpBox("Required [Prefab] missing", MessageType.Error);
             _isSaveable = false;
+        }
+        else if (_gunBaseData._basePrefab != null)
+        {
+            GameObject prefabTester = (GameObject)AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(_gunBaseData._basePrefab), typeof(GameObject));
+
+            if (!prefabTester.GetComponent<GunBase>())
+            {
+                EditorGUILayout.HelpBox("Required [Prefab][GunBase] missing", MessageType.Error);
+                _isSaveable = false;
+            }
         }
         else
         {
@@ -93,6 +111,16 @@ public class GunSetupWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Damage");
         _gunBaseData._damage = EditorGUILayout.FloatField(_gunBaseData._damage);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Weapon Accuracy");
+        _gunBaseData._accuracy = EditorGUILayout.FloatField(_gunBaseData._accuracy);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Projectile Speed");
+        _gunBaseData._bulletTravelSpeed = EditorGUILayout.FloatField(_gunBaseData._bulletTravelSpeed);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -180,9 +208,8 @@ public class GunSetupWindow : EditorWindow
             {
                 case BaseGunType.PISTOL:
 
-                    if (!newPrefab.GetComponent<Pistol>())
+                    if (newPrefab.GetComponent<Pistol>())
                     {
-                        newPrefab.AddComponent(typeof(Pistol));
                         newPrefab.GetComponent<Pistol>().GunDataSet = _gunBaseData;
                     }
 

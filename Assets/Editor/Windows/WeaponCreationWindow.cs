@@ -96,10 +96,20 @@ public class WeaponCreationWindow : EditorWindow
         GUILayout.Label("Create New Weapon");
         GUILayout.Space(5);
 
+        EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
+
         GUILayout.Label("Weapon Base Class");
         _weaponData._baseWeaponClass = (BaseWeaponClass)EditorGUILayout.EnumPopup(_weaponData._baseWeaponClass);
+
         EditorGUILayout.EndHorizontal();
+
+        if (_weaponData._baseWeaponClass == BaseWeaponClass.NONE)
+        {
+            EditorGUILayout.HelpBox("Required [WeaponClass] missing", MessageType.Error);
+        }
+
+        EditorGUILayout.EndVertical();
 
         GUILayout.Space(5);
 

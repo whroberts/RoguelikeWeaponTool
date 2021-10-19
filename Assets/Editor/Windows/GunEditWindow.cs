@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 using UnityEditor;
-using UnityEditor.Events;
 using Types;
-using System;
 
 public class GunEditWindow : EditorWindow
 {
@@ -55,6 +52,11 @@ public class GunEditWindow : EditorWindow
         _unsavedGunData._gunFireType = (GunFireType)EditorGUILayout.EnumPopup(_unsavedGunData._gunFireType);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Recoil Type");
+        _unsavedGunData._recoilType = (RecoilType)EditorGUILayout.EnumPopup(_unsavedGunData._recoilType);
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Base Prefab");
@@ -66,12 +68,23 @@ public class GunEditWindow : EditorWindow
             EditorGUILayout.HelpBox("Required [Prefab] missing", MessageType.Error);
             _isSaveable = false;
         }
+        else if (_unsavedGunData._basePrefab != null)
+        {
+            GameObject prefabTester = (GameObject)AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(_unsavedGunData._basePrefab), typeof(GameObject));
+
+            if (!prefabTester.GetComponent<GunBase>())
+            {
+                EditorGUILayout.HelpBox("Required [Prefab][GunBase] missing", MessageType.Error);
+                _isSaveable = false;
+            }
+        }
         else
         {
             _isSaveable = true;
         }
         EditorGUILayout.EndVertical();
 
+        /*
         EditorGUILayout.BeginVertical();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Name");
@@ -88,10 +101,21 @@ public class GunEditWindow : EditorWindow
             _isSaveable = true;
         }
         EditorGUILayout.EndVertical();
+        */
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Damage");
         _unsavedGunData._damage = EditorGUILayout.FloatField(_unsavedGunData._damage);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Weapon Accuracy");
+        _unsavedGunData._accuracy = EditorGUILayout.FloatField(_unsavedGunData._accuracy);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Projectile Speed");
+        _unsavedGunData._bulletTravelSpeed = EditorGUILayout.FloatField(_unsavedGunData._bulletTravelSpeed);
         EditorGUILayout.EndHorizontal();
 
         DrawButtons();
@@ -108,7 +132,7 @@ public class GunEditWindow : EditorWindow
             {
                 SaveWeaponData(_unsavedGunData);
                 _isSaved = true;
-                //_window.Close();
+                _window.Close();
             }
         }
         else if (GUILayout.Button("Save", GUILayout.Height(30)))
@@ -152,8 +176,6 @@ public class GunEditWindow : EditorWindow
     void SaveWeaponData(GunBaseData gunData)
     {
         string tempPath = "Assets/Resources/WeaponData/Data/";
-
-        //AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(_savedGunData));
         _savedGunData = new GunBaseData();
 
         _savedGunData._baseGunType = gunData._baseGunType;

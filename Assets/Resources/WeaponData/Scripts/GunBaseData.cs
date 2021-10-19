@@ -8,9 +8,6 @@ public class GunBaseData : WeaponData
     public BaseGunType _baseGunType;
     public GunFireType _gunFireType;
 
-    /*  -- not implemented
-     * is based on BaseGunType
-    */
     public Object _basePrefab;
     
     public string _name;
@@ -18,8 +15,8 @@ public class GunBaseData : WeaponData
 
     //havent added to weapon creation window
 
-    public float _accuracy;
-    public float _bulletTravelSpeed;
+    public float _accuracy = 100;
+    public float _bulletTravelSpeed = 1;
 
     /* Limiter not implemented
      * based on GunFireType
