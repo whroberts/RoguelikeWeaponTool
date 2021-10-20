@@ -8,12 +8,13 @@ namespace Projectile
     {
         protected override void DoIt()
         {
+            Debug.Log("Shot Bullet");
             // plays feedback when instantiated 
             LaunchFeedback();
 
             Rigidbody rb;
             rb = this.GetComponent<Rigidbody>();
-            rb.velocity = transform.forward * _speed;
+            rb.velocity = transform.forward * Speed;
 
             Destroy(gameObject, 8f);
         }

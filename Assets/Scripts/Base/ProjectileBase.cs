@@ -12,7 +12,6 @@ namespace Projectile
         protected abstract void DoIt();
 
         [HideInInspector] public float Speed;
-        protected float _speed { get { return _speed; } set { Speed = value; } }
 
         private void Start()
         {

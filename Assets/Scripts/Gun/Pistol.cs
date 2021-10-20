@@ -6,16 +6,59 @@ using Projectile;
 public class Pistol : GunBase
 {
     [Header("Bullet Prefab")]
-    [SerializeField] Bullet _bullet = null;
+    [SerializeField] GameObject _bullet = null;
 
-    protected override void Shoot()
+    bool _shooting = false;
+
+    protected override void Shoot(int shots)
     {
-        Instantiate(_bullet, _muzzleLocation, false);
-        _bullet.Speed = _bulletTravelSpeed;
+        if (!_canHoldTrigger)
+        {
+            StartCoroutine(ShotDelay(shots));
+        }
+        else if (_canHoldTrigger)
+        {
+            StartCoroutine(Automatic());
+        }
+
     }
 
     protected override void EquipWeapon()
     {
 
+    }
+
+    IEnumerator ShotDelay(int shots)
+    {
+        for (int i = 0; i < shots; i++)
+        {
+            GameObject bullet = Instantiate(_bullet, _muzzleLocation.position, _muzzleLocation.rotation);
+
+            Bullet b = bullet.GetComponent<Bullet>();
+
+            if (b != null)
+            {
+                b.Speed = _bulletTravelSpeed;
+            }
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
+
+    IEnumerator Automatic()
+    {
+        if (!_shooting) 
+        {
+            _shooting = true;
+            GameObject bullet = Instantiate(_bullet, _muzzleLocation.position, _muzzleLocation.rotation);
+
+            Bullet b = bullet.GetComponent<Bullet>();
+
+            if (b != null)
+            {
+                b.Speed = _bulletTravelSpeed;
+            }
+            yield return new WaitForSeconds(0.1f);
+            _shooting = false;
+        }
     }
 }

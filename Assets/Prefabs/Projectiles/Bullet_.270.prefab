@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1028572424529375148}
   - component: {fileID: 5636231992704264370}
   - component: {fileID: 4956150969291799089}
-  m_Layer: 8
+  m_Layer: 13
   m_Name: Bullet_.270
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,15 +89,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}
       propertyPath: m_LocalScale.x
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}
       propertyPath: m_LocalScale.y
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -149,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 13
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 43047e3fce187cb4b8e2c220097f98fd, type: 3}

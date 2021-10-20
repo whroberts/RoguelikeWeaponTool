@@ -7,7 +7,7 @@ using Types;
 [RequireComponent(typeof(GunBase))]
 public abstract class GunBase : MonoBehaviour
 {
-    protected abstract void Shoot();
+    protected abstract void Shoot(int shots);
     protected abstract void EquipWeapon();
 
     public GunBaseData GunDataSet;
@@ -22,19 +22,21 @@ public abstract class GunBase : MonoBehaviour
 
     AudioSource _audioSource;
 
-    protected float _timeOfLastShot = 0;
     protected bool _canHoldTrigger = false;
 
     /* pulls data from the saved data set for simplicity
      * 
      * redundant, can be cleaned up later
     */
-    protected float _fireRate = 1;
+    protected int _fireRate = 1;
+    protected float _timeOfLastShot;
     protected float _accuracy = 100;
     protected float _bulletTravelSpeed = 10;
 
     // for recoil
     protected float _recoil = 0;
+
+    protected float _fireDelay = 0.1f;
 
     private void Start()
     {
@@ -43,6 +45,7 @@ public abstract class GunBase : MonoBehaviour
             InitDataFromSet();
             EquipWeapon();
         }
+        _timeOfLastShot = -_fireRate;
     }
 
     private void Update()
@@ -56,7 +59,7 @@ public abstract class GunBase : MonoBehaviour
         {
             case (GunFireType.SEMI):
 
-                _fireRate = 5;
+                _fireRate = 1;
                 _canHoldTrigger = false;
 
                 break;
@@ -113,26 +116,24 @@ public abstract class GunBase : MonoBehaviour
     {
         if (!_canHoldTrigger)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (_timeOfLastShot <= Time.time - _fireRate)
             {
-                if (_timeOfLastShot <= Time.time - _fireRate)
+                Debug.Log(_timeOfLastShot);
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     _timeOfLastShot = Time.time;
-                    Shoot();
+                    Shoot(_fireRate);
                     MuzzleFeedback();
                 }
             }
         }
         else if (_canHoldTrigger)
         {
-            if (Input.GetKey(KeyCode.Mouse1))
+            Debug.Log("Can Shoot");
+            if (Input.GetKey(KeyCode.Mouse0))
             {
-                if (_timeOfLastShot <= Time.time - _fireRate)
-                {
-                    _timeOfLastShot = Time.time;
-                    Shoot();
-                    MuzzleFeedback();
-                }
+                Shoot(_fireRate);
+                MuzzleFeedback();
             }
         }
     }

@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 4715254638650369497}
   - component: {fileID: 93468788155652665}
   m_Layer: 7
-  m_Name: RifleBase
+  m_Name: RifleTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
