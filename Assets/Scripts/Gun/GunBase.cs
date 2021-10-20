@@ -13,7 +13,7 @@ public abstract class GunBase : MonoBehaviour
     public GunBaseData GunDataSet;
     protected GunBaseData _gunDataSet => GunDataSet;
 
-    public GameObject CurrentWeapon;
+    [HideInInspector] public GameObject CurrentWeapon;
     protected GameObject _currentWeapon => CurrentWeapon;
 
     [Header("Header")]

@@ -12,6 +12,7 @@ public class GunSetupWindow : EditorWindow
 {
     private bool _createNewDataSet = true;
     private bool _createNewPrefab = true;
+    private bool _addToPlayer = false;
     private bool _isSaved = false;
     private bool _isSaveable = false;
 
@@ -20,6 +21,9 @@ public class GunSetupWindow : EditorWindow
     public static GunBaseData CurrentGunBase { get { return _gunBaseData; } }
 
     PopUpWindow _popUpWindow;
+
+    GameObject _newPrefab;
+    GameObject _locationToEquipTo;
 
     public event Action Check = delegate { };
 
@@ -133,6 +137,13 @@ public class GunSetupWindow : EditorWindow
         _createNewPrefab = EditorGUILayout.Toggle(_createNewPrefab);
         EditorGUILayout.EndHorizontal();
 
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Equip to Player?");
+        _addToPlayer = EditorGUILayout.Toggle(_addToPlayer);
+        EditorGUILayout.EndHorizontal();
+
+        SetEquipLocation();
+
         DrawButtons();
     }
 
@@ -146,6 +157,7 @@ public class GunSetupWindow : EditorWindow
             if (_isSaveable)
             {
                 CreateNewWeaponData();
+                EquipToLocation();
                 _window.Close();
             }
         }
@@ -156,6 +168,7 @@ public class GunSetupWindow : EditorWindow
                 _isSaved = true;
                 CreateNewWeaponData();
                 GunEditWindow.OpenGunEditWindow(_gunBaseData);
+                EquipToLocation();
                 _window.Close();
             }
         }
@@ -202,23 +215,23 @@ public class GunSetupWindow : EditorWindow
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            GameObject newPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(newPrefabPath, typeof(GameObject));
+            _newPrefab = (GameObject)AssetDatabase.LoadAssetAtPath(newPrefabPath, typeof(GameObject));
 
             switch (_gunBaseData._baseGunType)
             {
                 case BaseGunType.PISTOL:
 
-                    if (newPrefab.GetComponent<Pistol>())
+                    if (_newPrefab.GetComponent<Pistol>())
                     {
-                        newPrefab.GetComponent<Pistol>().GunDataSet = _gunBaseData;
+                        _newPrefab.GetComponent<Pistol>().GunDataSet = _gunBaseData;
                     }
 
                     break;
                 case BaseGunType.RIFLE:
 
-                    if (newPrefab.GetComponent<Rifle>())
+                    if (_newPrefab.GetComponent<Rifle>())
                     {
-                        newPrefab.GetComponent<Rifle>().GunDataSet = _gunBaseData;
+                        _newPrefab.GetComponent<Rifle>().GunDataSet = _gunBaseData;
                     }
 
                     break;
@@ -227,6 +240,54 @@ public class GunSetupWindow : EditorWindow
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+    }
+
+    void SetEquipLocation()
+    {
+        EditorGUILayout.Space(5);
+        if (_addToPlayer)
+        {
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Equip to Player");
+            _locationToEquipTo = (GameObject)EditorGUILayout.ObjectField(_locationToEquipTo, typeof(GameObject), true);
+            EditorGUILayout.EndHorizontal();
+
+            if (_locationToEquipTo != null)
+            {
+                GunBase[] locationChildren = _locationToEquipTo.GetComponentsInChildren<GunBase>();
+
+                if (locationChildren.Length > 0)
+                {
+                    for (int i = 0; i < locationChildren.Length; i++)
+                    {
+                        DestroyImmediate(locationChildren[i].gameObject);
+                    }
+                }
+            }
+            else if (_locationToEquipTo == null)
+            {
+                EditorGUILayout.HelpBox("Required [GameObject][Transform] missing", MessageType.Error);
+            }
+            EditorGUILayout.EndVertical();
+        }
+    }
+
+    void EquipToLocation()
+    {
+        if (_locationToEquipTo != null)
+        {
+            GunBase[] locationChildren = _locationToEquipTo.GetComponentsInChildren<GunBase>();
+
+            if (locationChildren.Length > 0)
+            {
+                for (int i = 0; i < locationChildren.Length; i++)
+                {
+                    DestroyImmediate(locationChildren[i].gameObject);
+                }
+            }
+            GameObject newWeapon = Instantiate(_newPrefab, _locationToEquipTo.transform, false);
+        }
     }
 
     private void OnDestroy()
