@@ -16,8 +16,12 @@ public abstract class GunBase : MonoBehaviour
     [HideInInspector] public GameObject CurrentWeapon;
     protected GameObject _currentWeapon => CurrentWeapon;
 
-    [Header("Header")]
+    [Header("Effects")]
     [SerializeField] ParticleSystem _muzzleFlash = null;
+    [SerializeField] ParticleSystem _impactEffect = null;
+    [SerializeField] AudioClip _shotSound = null;
+    [SerializeField] AudioClip _hitSound = null;
+
     [SerializeField] protected Transform _muzzleLocation = null;
 
     AudioSource _audioSource;

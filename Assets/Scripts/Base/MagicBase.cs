@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Types;
+using Projectile;
 
 [RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(ParticleSystem))]
