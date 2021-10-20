@@ -47,7 +47,7 @@ public class MagicSetupWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Magic Fire Type");
-        _magicBaseData._magicFireType = (MagicFireType)EditorGUILayout.EnumPopup(_magicBaseData._magicFireType);
+        _magicBaseData._magicAbilityType = (MagicAbilityType)EditorGUILayout.EnumPopup(_magicBaseData._magicAbilityType);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginVertical();
@@ -86,7 +86,7 @@ public class MagicSetupWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Damage");
-        _magicBaseData._damage = EditorGUILayout.FloatField(_magicBaseData._damage);
+        _magicBaseData._damageValue = EditorGUILayout.FloatField(_magicBaseData._damageValue);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -178,16 +178,16 @@ public class MagicSetupWindow : EditorWindow
                     if (!newPrefab.GetComponent<Damage>())
                     {
                         newPrefab.AddComponent(typeof(Damage));
-                        newPrefab.GetComponent<Damage>().MagicBaseData = _magicBaseData;
+                        newPrefab.GetComponent<Damage>().MagicDataSet = _magicBaseData;
                     }
 
                     break;
                 case BaseMagicType.HEAL:
 
-                    if (!newPrefab.GetComponent<Heal>())
+                    if (!newPrefab.GetComponent<Healing>())
                     {
-                        newPrefab.AddComponent(typeof(Heal));
-                        newPrefab.GetComponent<Heal>().MagicBaseData = _magicBaseData;
+                        newPrefab.AddComponent(typeof(Healing));
+                        newPrefab.GetComponent<Healing>().MagicDataSet = _magicBaseData;
                     }
 
                     break;

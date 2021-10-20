@@ -52,7 +52,7 @@ public class MagicEditWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Gun Fire Type");
-        _unsavedMagicData._magicFireType = (MagicFireType)EditorGUILayout.EnumPopup(_unsavedMagicData._magicFireType);
+        _unsavedMagicData._magicAbilityType = (MagicAbilityType)EditorGUILayout.EnumPopup(_unsavedMagicData._magicAbilityType);
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginVertical();
@@ -91,7 +91,7 @@ public class MagicEditWindow : EditorWindow
 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Damage");
-        _unsavedMagicData._damage = EditorGUILayout.FloatField(_unsavedMagicData._damage);
+        _unsavedMagicData._damageValue = EditorGUILayout.FloatField(_unsavedMagicData._damageValue);
         EditorGUILayout.EndHorizontal();
 
         DrawButtons();
@@ -138,10 +138,10 @@ public class MagicEditWindow : EditorWindow
         _unsavedMagicData = new MagicBaseData();
         _unsavedMagicData._baseWeaponClass = BaseWeaponClass.MAGIC;
         _unsavedMagicData._baseMagicType = gunData._baseMagicType;
-        _unsavedMagicData._magicFireType = gunData._magicFireType;
+        _unsavedMagicData._magicAbilityType = gunData._magicAbilityType;
         _unsavedMagicData._basePrefab = gunData._basePrefab;
         _unsavedMagicData._name = "tmp_" + gunData._name;
-        _unsavedMagicData._damage = gunData._damage;
+        _unsavedMagicData._damageValue = gunData._damageValue;
 
         AssetDatabase.CreateAsset(_unsavedMagicData, tempPath + _unsavedMagicData._name + ".asset");
 
@@ -157,10 +157,10 @@ public class MagicEditWindow : EditorWindow
         _savedMagicData = new MagicBaseData();
 
         _savedMagicData._baseMagicType = gunData._baseMagicType;
-        _savedMagicData._magicFireType = gunData._magicFireType;
+        _savedMagicData._magicAbilityType = gunData._magicAbilityType;
         _savedMagicData._basePrefab = gunData._basePrefab;
         _savedMagicData._name = _originalName;
-        _savedMagicData._damage = gunData._damage;
+        _savedMagicData._damageValue = gunData._damageValue;
 
         AssetDatabase.CreateAsset(_savedMagicData, tempPath + _savedMagicData._name + ".asset");
 
@@ -177,7 +177,7 @@ public class MagicEditWindow : EditorWindow
             dirty = true;
         }
 
-        if (_unsavedMagicData._magicFireType != _savedMagicData._magicFireType)
+        if (_unsavedMagicData._magicAbilityType != _savedMagicData._magicAbilityType)
         {
             dirty = true;
         }
@@ -187,7 +187,7 @@ public class MagicEditWindow : EditorWindow
             dirty = true;
         }
 
-        if (_unsavedMagicData._damage != _savedMagicData._damage)
+        if (_unsavedMagicData._damageValue != _savedMagicData._damageValue)
         {
             dirty = true;
         }

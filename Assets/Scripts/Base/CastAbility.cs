@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Projectile
 {
-    public class Bullet : ProjectileBase
+    public class CastAbility : ProjectileBase
     {
         protected override void Projectile()
         {
-            Debug.Log("Shot Bullet");
+            Debug.Log("Cast Ability");
             // plays feedback when instantiated 
             LaunchFeedback();
 
@@ -18,8 +18,6 @@ namespace Projectile
 
             Destroy(gameObject, 8f);
         }
-
     }
+
 }
-
-

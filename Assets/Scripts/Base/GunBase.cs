@@ -8,7 +8,6 @@ using Types;
 public abstract class GunBase : MonoBehaviour
 {
     protected abstract void Shoot(int shots);
-    protected abstract void EquipWeapon();
 
     public GunBaseData GunDataSet;
     protected GunBaseData _gunDataSet => GunDataSet;
@@ -47,7 +46,6 @@ public abstract class GunBase : MonoBehaviour
         if (GunDataSet != null)
         {
             InitDataFromSet();
-            EquipWeapon();
         }
         _timeOfLastShot = -_fireRate;
     }
@@ -85,7 +83,7 @@ public abstract class GunBase : MonoBehaviour
 
         switch (_gunDataSet._recoilType)
         {
-            case (RecoilType.NONE):
+            case (RecoilType.NULL):
 
                 _recoil = 0;
 

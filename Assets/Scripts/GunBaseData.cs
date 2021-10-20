@@ -11,18 +11,11 @@ public class GunBaseData : WeaponData
     public Object _basePrefab;
     
     public string _name;
-    public float _damage;
+    public float _damage = 10;
 
-    //havent added to weapon creation window
+    public float _accuracy = 90;
+    public float _bulletTravelSpeed = 25;
 
-    public float _accuracy = 100;
-    public float _bulletTravelSpeed = 1;
-
-    /* Limiter not implemented
-     * based on GunFireType
-     * Semi - None or Low or Normal or High
-     * Auto - Low or Normal or High
-     */
     public RecoilType _recoilType;
 
 }

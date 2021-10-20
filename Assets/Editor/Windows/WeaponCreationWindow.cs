@@ -104,7 +104,7 @@ public class WeaponCreationWindow : EditorWindow
 
         EditorGUILayout.EndHorizontal();
 
-        if (_weaponData._baseWeaponClass == BaseWeaponClass.NONE)
+        if (_weaponData._baseWeaponClass == BaseWeaponClass.NULL)
         {
             EditorGUILayout.HelpBox("Required [WeaponClass] missing", MessageType.Error);
         }
@@ -127,7 +127,8 @@ public class WeaponCreationWindow : EditorWindow
         if (GUILayout.Button("Create New", GUILayout.Height(40)))
         {
             AssetDatabase.Refresh();
-            
+
+            /*
             switch (_weaponData._baseWeaponClass)
             {
                 case BaseWeaponClass.GUN:
@@ -137,6 +138,8 @@ public class WeaponCreationWindow : EditorWindow
                     MagicSetupWindow.OpenMagicSetupWindow();
                     break;
             }
+            */
+            CreationWindow.OpenCreationWindow();
         }
         EditorGUILayout.EndHorizontal();
 

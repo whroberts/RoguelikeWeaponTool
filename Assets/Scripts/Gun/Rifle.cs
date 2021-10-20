@@ -22,12 +22,6 @@ public class Rifle : GunBase
         }
 
     }
-
-    protected override void EquipWeapon()
-    {
-
-    }
-
     IEnumerator ShotDelay(int shots)
     {
         for (int i = 0; i < shots; i++)

@@ -1,101 +1,177 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using Types;
-using Projectile;
 
 [RequireComponent(typeof(AudioSource))]
-[RequireComponent(typeof(ParticleSystem))]
-[RequireComponent(typeof(GunBase))]
+[RequireComponent(typeof(MagicBase))]
 public abstract class MagicBase : MonoBehaviour
 {
-    protected abstract void CastMagic();
-    protected abstract void EquipAbility();
+    protected abstract void UseAbility(MagicAbilityType abilityType);
 
-    public MagicBaseData MagicBaseData;
-    protected MagicBaseData _magicBaseData;
+    public MagicBaseData MagicDataSet;
+    protected MagicBaseData _magicDataSet => MagicDataSet;
 
-    [Header("Standard Effects")]
-    //[SerializeField] ParticleSystem _muzzleFlash = null;
+    [HideInInspector] public GameObject CurrentAbility;
+    protected GameObject _currentAbility => CurrentAbility;
+
+    [Header("Effects")]
+    [SerializeField] ParticleSystem _muzzleFlash = null;
+    [SerializeField] ParticleSystem _impactEffect = null;
+    [SerializeField] AudioClip _shotSound = null;
+    [SerializeField] AudioClip _hitSound = null;
+
+    protected Transform _launchLocation;
     AudioSource _audioSource;
 
-    protected float _timeOfLastAbilityUse = 0;
-    protected bool _canHoldToCast = false;
+    protected bool _isCast = false;
+    protected bool _isBeam = false;
+    protected bool _onCooldown = false;
 
-    /* pulls data from the saved data set for simplicity
-     * 
-     * redundant, can be cleaned up later
-    */
     protected float _fireRate = 1;
-    protected float _accuracy = 100;
-    protected float _bulletTravelSpeed = 10;
+    protected float _toCastSpeed = 10;
+    protected float _currentMana;
+    protected float _manaGainPerSecond;
 
-    private void Awake()
+    private void Start()
     {
-        if (MagicBaseData != null)
+        if (MagicDataSet != null)
         {
-            _magicBaseData = MagicBaseData;
-            InitDataFromSet();
-            EquipAbility();
+            InitData();
         }
+        
     }
 
     private void Update()
     {
-        CanUseMagicCheck();
+        UseAbilityCheck();
     }
 
-    void InitDataFromSet()
+    void InitData()
     {
-        switch (_magicBaseData._magicFireType)
+        switch (_magicDataSet._magicAbilityType)
         {
-            case (MagicFireType.CAST):
+            case MagicAbilityType.NULL:
+                throw new System.Exception();
 
-                _fireRate = 52;
-                _canHoldToCast = false;
+            case (MagicAbilityType.CAST):
 
+                _isCast = true;
+                _isBeam = false;
                 break;
 
-            case (MagicFireType.HOLD):
+            case (MagicAbilityType.BEAM):
 
-                _fireRate = 3;
-                _canHoldToCast = false;
-
+                _isBeam = true;
+                _isCast = false;
                 break;
         }
 
+        _currentMana = _magicDataSet._mana;
+        CurrentAbility = this.gameObject;
+        _launchLocation = this.gameObject.transform;
 
-        _accuracy = _magicBaseData._accuracy;
-        _bulletTravelSpeed = _magicBaseData._abilityTravelSpeed;
-        _timeOfLastAbilityUse = Time.time;
     }
 
-    void CanUseMagicCheck()
+    void UseAbilityCheck()
     {
-        if (!_canHoldToCast)
+        if (_isCast)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (!_onCooldown)
             {
-                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    _timeOfLastAbilityUse = Time.time;
-                    CastMagic();
-                    MuzzleFeedback();
+                    StartCoroutine(CastMagic());
+                    AbilityUseFeedback();
                 }
             }
         }
-        else if (_canHoldToCast)
+        else if (_isBeam)
         {
-            if (Input.GetKey(KeyCode.Mouse1))
+            if (!_onCooldown)
             {
-                if (_timeOfLastAbilityUse <= Time.time - _fireRate)
+                if (Input.GetKey(KeyCode.Mouse0))
                 {
-                    _timeOfLastAbilityUse = Time.time;
-                    CastMagic();
-                    MuzzleFeedback();
+                    StartCoroutine(BeamMagic());
+                    AbilityUseFeedback();
                 }
             }
+        }
+        else if (_isBeam && _isCast)
+        {
+            throw new System.Exception();
+        }
+    }
+
+    IEnumerator ManaRecharger()
+    {
+        _magicDataSet._mana = Mathf.Clamp(_magicDataSet._mana, 0, 100);
+        _magicDataSet._manaRechargeRate = Mathf.Clamp(_magicDataSet._manaRechargeRate, 0, 100);
+        _currentMana = Mathf.Clamp(_currentMana, 0, 100);
+
+        float timeTillFull = (_magicDataSet._mana - _currentMana) * (1 / _magicDataSet._manaRechargeRate);
+        Debug.Log(timeTillFull);
+        yield return new WaitForSecondsRealtime(_magicDataSet._rechargeDelay);
+
+        ParticleSystem[] idlePS = CurrentAbility.GetComponentsInChildren<ParticleSystem>();
+        ParticleSystem.EmissionModule[] startEmissionModule = null;
+        ParticleSystem.MinMaxCurve[] startEmissionCurve = null;
+        ParticleSystem.MinMaxCurve[] currentEmissionCurve = null;
+
+        float[] startEmissionValue = null;
+
+        for (int i = 0; i < idlePS.Length; i++)
+        {
+            startEmissionModule[i] = idlePS[i].emission;
+            startEmissionCurve[i] = startEmissionModule[i].rateOverTime;
+
+            currentEmissionCurve[i] = startEmissionCurve[i];
+            currentEmissionCurve[i].constant = startEmissionValue[i] * (_currentMana / _magicDataSet._mana);
+            RateOverTimeIncrease(currentEmissionCurve[i], timeTillFull);
+        }
+
+        yield return new WaitForSecondsRealtime(timeTillFull);
+    }
+
+    IEnumerator RateOverTimeIncrease(ParticleSystem.MinMaxCurve mmc, float timeTillFull)
+    {
+        mmc.constant += (_magicDataSet._mana - mmc.constant) / timeTillFull;
+
+        if (_currentMana >= _magicDataSet._mana)
+        {
+            StopCoroutine(RateOverTimeIncrease(mmc, timeTillFull));
+        }
+
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(RateOverTimeIncrease(mmc, timeTillFull));
+    }
+
+    IEnumerator CastMagic() 
+    {
+        StopCoroutine(ManaRecharger());
+        UseAbility(MagicAbilityType.CAST);
+
+        _onCooldown = true;
+
+        if (!Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            ManaRecharger();
+        }
+        yield return new WaitForSeconds(_magicDataSet._coolDown);
+        _onCooldown = false;
+    }
+
+    IEnumerator BeamMagic()
+    {
+        StopCoroutine(ManaRecharger());
+        UseAbility(MagicAbilityType.BEAM);
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            _onCooldown = true;
+            ManaRecharger();
+            yield return new WaitForSeconds(_magicDataSet._coolDown);
+            _onCooldown = false;
         }
     }
 
@@ -104,7 +180,7 @@ public abstract class MagicBase : MonoBehaviour
 
     }
 
-    void MuzzleFeedback()
+    void AbilityUseFeedback()
     {
 
     }

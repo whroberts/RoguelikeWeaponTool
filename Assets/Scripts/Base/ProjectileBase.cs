@@ -9,13 +9,13 @@ namespace Projectile
     [RequireComponent(typeof(Collider))]
     public abstract class ProjectileBase : MonoBehaviour
     {
-        protected abstract void DoIt();
+        protected abstract void Projectile();
 
         [HideInInspector] public float Speed;
 
         private void Start()
         {
-            DoIt();
+            Projectile();
         }
 
         private void OnCollisionEnter(Collision collision)

@@ -6,45 +6,46 @@ namespace Types
 {
     public enum BaseWeaponClass
     {
-        NONE,
+        NULL,
         GUN,
         MAGIC
     }
 
     public enum BaseGunType
     {
-        NONE,
+        NULL,
         PISTOL,
         RIFLE
     }
 
     public enum GunFireType
     {
-        NONE,
+        NULL,
         SEMI,
         BURST,
         AUTO
     }
 
-    public enum BaseMagicType
-    {
-        NONE,
-        DAMAGE,
-        HEAL
-    }
-
-    public enum MagicFireType
-    {
-        NONE,
-        CAST,
-        HOLD
-    }
-
     public enum RecoilType
     {
-        NONE,
+        NULL,
         LIGHT,
         NORMAL,
         HIGH
     }
+
+    public enum BaseMagicType
+    {
+        NULL,
+        DAMAGE,
+        HEAL
+    }
+
+    public enum MagicAbilityType
+    {
+        NULL,
+        CAST,
+        BEAM
+    }
 }
+
