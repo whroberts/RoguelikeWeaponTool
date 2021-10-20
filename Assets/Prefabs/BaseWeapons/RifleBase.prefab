@@ -449,8 +449,8 @@ MonoBehaviour:
   GunDataSet: {fileID: 0}
   CurrentWeapon: {fileID: 0}
   _muzzleFlash: {fileID: 0}
-  _muzzleLocation: {fileID: 0}
-  _bullet: {fileID: 0}
+  _muzzleLocation: {fileID: 1970876165506142599}
+  _bullet: {fileID: 5636231992704264371, guid: f2560eeddca5e2f43807e355c9dc55cd, type: 3}
 --- !u!1 &847216302895903327
 GameObject:
   m_ObjectHideFlags: 0
