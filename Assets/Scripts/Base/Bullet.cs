@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+namespace Projectile
 {
-    private void OnEnable()
+    public class Bullet : ProjectileBase
     {
-        //ShootBullet();
-    }
+        protected override void DoIt()
+        {
+            // plays feedback when instantiated 
+            LaunchFeedback();
 
-    /*
-    private void ShootBullet()
-    {
-        Rigidbody rb;
-        rb = _bullet.GetComponent<Rigidbody>();
-        rb.velocity = transform.forward * _travelSpeed;
+            Rigidbody rb;
+            rb = this.GetComponent<Rigidbody>();
+            rb.velocity = transform.forward * _speed;
 
-        Destroy(gameObject, 8f);
+            Destroy(gameObject, 8f);
+        }
+
     }
-    */
 }
+
+

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Projectile;
 
 public class Pistol : GunBase
 {
@@ -10,6 +11,7 @@ public class Pistol : GunBase
     protected override void Shoot()
     {
         Instantiate(_bullet, _muzzleLocation, false);
+        _bullet.Speed = _bulletTravelSpeed;
     }
 
     protected override void EquipWeapon()
