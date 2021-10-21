@@ -73,7 +73,7 @@ public class WeaponCreationWindow : EditorWindow
 
             for (int j = 0; j <= i; j++)
             {
-                GUI.DrawTexture(_baseSections[j], _textures[j]);
+                //GUI.DrawTexture(_baseSections[j], _textures[j]);
             }
         }
 

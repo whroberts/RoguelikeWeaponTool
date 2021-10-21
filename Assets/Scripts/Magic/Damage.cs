@@ -24,6 +24,9 @@ public class Damage : MagicBase
 
                 break;
             case MagicAbilityType.BEAM:
+
+                Beam();
+
                 break;
         }
     }
@@ -43,13 +46,13 @@ public class Damage : MagicBase
 
     void Beam()
     {
-        GameObject newBeam = Instantiate(_damageBeam, _launchLocation.position, _launchLocation.rotation);
+        GameObject newBeam = Instantiate(_damageBeam, _launchLocation, false);
 
         BeamAbility bA = newBeam.GetComponent<BeamAbility>();
 
-        if (bA != null)
+        if (bA == null)
         {
-            bA.GetComponent<ParticleSystem>().Play();
+            throw new System.Exception();
         }
     }
 }

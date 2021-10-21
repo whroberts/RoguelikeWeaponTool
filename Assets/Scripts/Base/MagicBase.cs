@@ -33,6 +33,9 @@ public abstract class MagicBase : MonoBehaviour
     protected float _currentMana;
     protected float _manaGainPerSecond;
 
+    float startRegen = 0;
+    float endRegen = 0;
+
     private void Start()
     {
         if (MagicDataSet != null)
@@ -45,6 +48,7 @@ public abstract class MagicBase : MonoBehaviour
     private void Update()
     {
         UseAbilityCheck();
+        //Debug.Log("Current Mana: " + _currentMana);
     }
 
     void InitData()
@@ -68,9 +72,9 @@ public abstract class MagicBase : MonoBehaviour
         }
 
         _currentMana = _magicDataSet._mana;
+        Mathf.Clamp(_currentMana, 0, 100);
         CurrentAbility = this.gameObject;
-        _launchLocation = this.gameObject.transform;
-
+        _launchLocation = gameObject.transform;
     }
 
     void UseAbilityCheck()
@@ -79,28 +83,36 @@ public abstract class MagicBase : MonoBehaviour
         {
             if (!_onCooldown)
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    StartCoroutine(CastMagic());
-                    AbilityUseFeedback();
-                }
+                CastMagic();
+                AbilityUseFeedback();
             }
         }
         else if (_isBeam)
         {
             if (!_onCooldown)
             {
-                if (Input.GetKey(KeyCode.Mouse0))
-                {
-                    StartCoroutine(BeamMagic());
-                    AbilityUseFeedback();
-                }
+                BeamMagic();
+                AbilityUseFeedback();
             }
         }
         else if (_isBeam && _isCast)
         {
             throw new System.Exception();
         }
+    }
+
+    IEnumerator LoseMana()
+    {
+        if (_currentMana > 0)
+        {
+            _currentMana -= 1f;
+        } 
+        else if (_currentMana <= 0)
+        {
+            StopCoroutine(LoseMana());
+        }
+        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(LoseMana());
     }
 
     IEnumerator ManaRecharger()
@@ -110,69 +122,92 @@ public abstract class MagicBase : MonoBehaviour
         _currentMana = Mathf.Clamp(_currentMana, 0, 100);
 
         float timeTillFull = (_magicDataSet._mana - _currentMana) * (1 / _magicDataSet._manaRechargeRate);
-        Debug.Log(timeTillFull);
         yield return new WaitForSecondsRealtime(_magicDataSet._rechargeDelay);
 
-        ParticleSystem[] idlePS = CurrentAbility.GetComponentsInChildren<ParticleSystem>();
-        ParticleSystem.EmissionModule[] startEmissionModule = null;
-        ParticleSystem.MinMaxCurve[] startEmissionCurve = null;
-        ParticleSystem.MinMaxCurve[] currentEmissionCurve = null;
+        ParticleSystem idlePS = GetComponentInChildren<ParticleSystem>();
+        ParticleSystem.EmissionModule startEmissionModule = idlePS.emission;
+        ParticleSystem.MinMaxCurve startEmissionCurve = startEmissionModule.rateOverTime;
+        ParticleSystem.MinMaxCurve currentEmissionCurve = startEmissionCurve;
 
-        float[] startEmissionValue = null;
+        float startEmissionValue = startEmissionCurve.constant;
+        float rate = 0;
+        //Debug.Log("Start SEV: " + startEmissionValue);
 
-        for (int i = 0; i < idlePS.Length; i++)
-        {
-            startEmissionModule[i] = idlePS[i].emission;
-            startEmissionCurve[i] = startEmissionModule[i].rateOverTime;
+        currentEmissionCurve.constant = startEmissionValue * (_currentMana / _magicDataSet._mana);
+        //Debug.Log("Start CEC.c1: " + currentEmissionCurve.constant);
+        rate = (startEmissionValue - currentEmissionCurve.constant) / (_currentMana / _magicDataSet._manaRechargeRate);
+        //Debug.Log("Charge Rate: " + rate);
+        StartCoroutine(RateOverTimeIncrease(rate, timeTillFull));
 
-            currentEmissionCurve[i] = startEmissionCurve[i];
-            currentEmissionCurve[i].constant = startEmissionValue[i] * (_currentMana / _magicDataSet._mana);
-            RateOverTimeIncrease(currentEmissionCurve[i], timeTillFull);
-        }
-
-        yield return new WaitForSecondsRealtime(timeTillFull);
+        yield return new WaitForSecondsRealtime(timeTillFull * (_currentMana / _magicDataSet._mana));
     }
 
-    IEnumerator RateOverTimeIncrease(ParticleSystem.MinMaxCurve mmc, float timeTillFull)
+    IEnumerator RateOverTimeIncrease(float rate, float time)
     {
-        mmc.constant += (_magicDataSet._mana - mmc.constant) / timeTillFull;
-
         if (_currentMana >= _magicDataSet._mana)
         {
-            StopCoroutine(RateOverTimeIncrease(mmc, timeTillFull));
+            StopCoroutine(RateOverTimeIncrease(rate, time));
+            endRegen = Time.time;
+            Debug.Log("Time to regen: " + (endRegen - startRegen));
+            Debug.Log("Charge Time Value: " + time);
+            StopCoroutine(RateOverTimeIncrease(rate, time));
         }
+        else if (_currentMana < _magicDataSet._mana)
+        {
+
+            _currentMana += rate;
+            startRegen = Time.time;
+
+        }
+
+        Debug.Log(_currentMana);
 
         yield return new WaitForSeconds(1f);
-        StartCoroutine(RateOverTimeIncrease(mmc, timeTillFull));
+        StartCoroutine(RateOverTimeIncrease(rate, time));
     }
 
-    IEnumerator CastMagic() 
+    void CastMagic() 
     {
         StopCoroutine(ManaRecharger());
-        UseAbility(MagicAbilityType.CAST);
 
-        _onCooldown = true;
-
-        if (!Input.GetKeyUp(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            ManaRecharger();
+            UseAbility(MagicAbilityType.CAST);
+            _currentMana -= 10;
         }
-        yield return new WaitForSeconds(_magicDataSet._coolDown);
-        _onCooldown = false;
-    }
-
-    IEnumerator BeamMagic()
-    {
-        StopCoroutine(ManaRecharger());
-        UseAbility(MagicAbilityType.BEAM);
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            _onCooldown = true;
-            ManaRecharger();
-            yield return new WaitForSeconds(_magicDataSet._coolDown);
-            _onCooldown = false;
+            StartCoroutine(ManaRecharger());
+            StartCoroutine(Cooldown());
+
         }
+    }
+
+    void BeamMagic()
+    {
+        StopCoroutine(ManaRecharger());
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            UseAbility(MagicAbilityType.BEAM);
+            StartCoroutine(LoseMana());
+        }
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            StopCoroutine(LoseMana());
+            StartCoroutine(ManaRecharger());
+            StartCoroutine(Cooldown());
+        }
+    }
+
+    IEnumerator Cooldown()
+    {
+        _onCooldown = true;
+        StartCoroutine(ManaRecharger());
+        yield return new WaitForSeconds(_magicDataSet._coolDown);
+        _onCooldown = false;
     }
 
     protected void CurrentStats()

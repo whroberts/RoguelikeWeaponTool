@@ -24,7 +24,7 @@ namespace Projectile
             ImpactFeedback();
             // prints what was hit
 
-            Debug.Log("Hit: " + collision.gameObject.name + " at location - " + collision.gameObject.transform.position);
+            //Debug.Log("Hit: " + collision.gameObject.name + " at location - " + collision.gameObject.transform.position);
 
             // For editing, every damage script is different
         }
@@ -35,7 +35,7 @@ namespace Projectile
             ImpactFeedback();
 
             // prints what was hit
-            Debug.Log("Hit: " + other.gameObject.name + " at location - " + other.gameObject.transform.position);
+            //Debug.Log("Hit: " + other.gameObject.name + " at location - " + other.gameObject.transform.position);
 
             // For editing, every damage script is different
         }
@@ -56,11 +56,17 @@ namespace Projectile
             // hides the visuals and interactions
             MeshRenderer mesh = GetComponentInChildren<MeshRenderer>();
             Collider col = GetComponentInChildren<Collider>();
+            ParticleSystem ps = GetComponentInChildren<ParticleSystem>();
 
             if (mesh != null && col != null)
             {
                 mesh.enabled = false;
                 col.enabled = false;
+            }
+
+            if (ps != null)
+            {
+                ps.Stop();
             }
 
             // destroys after 3 seconds
