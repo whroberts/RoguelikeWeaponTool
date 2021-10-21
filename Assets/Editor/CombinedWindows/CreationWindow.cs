@@ -41,8 +41,8 @@ public class CreationWindow : EditorWindow
         {
             case BaseWeaponClass.NULL:
                 // test for error
-                _window.Close();
-                throw new ArgumentNullException();
+
+                throw new System.Exception();
 
             case BaseWeaponClass.GUN:
                 // checks and assigns to gun data
@@ -83,7 +83,7 @@ public class CreationWindow : EditorWindow
         else
         {
             _window.Close();
-            throw new OverflowException();
+            throw new System.Exception();
         }
 
         SetEquipLocation();
@@ -145,7 +145,7 @@ public class CreationWindow : EditorWindow
 
         if (_gunBaseData._name == null)
         {
-            EditorGUILayout.HelpBox("This needs a [Name] before it can be created.", MessageType.Error);
+            EditorGUILayout.HelpBox("Required [Name] missing", MessageType.Error);
             _isSaveable = false;
         }
         else
@@ -357,7 +357,20 @@ public class CreationWindow : EditorWindow
             if (_isSaveable)
             {
                 CreateNewWeaponData();
-                GunEditWindow.OpenGunEditWindow(_gunBaseData);
+
+                if (_gunBaseData != null)
+                {
+                    WeaponEditWindow.OpenWeaponEditWindow(_gunBaseData);
+                }
+                else if (_magicBaseData != null)
+                {
+                    MagicEditWindow.OpenMagicEditWindow(_magicBaseData);
+                }
+                else
+                {
+                    _window.Close();
+                    throw new System.Exception();
+                }
                 EquipToLocation();
                 _window.Close();
             }
@@ -508,19 +521,34 @@ public class CreationWindow : EditorWindow
         {
             EditorGUILayout.BeginVertical();
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Equip to Player");
+            GUILayout.Label("Location to Equip To");
             _locationToEquipTo = (GameObject)EditorGUILayout.ObjectField(_locationToEquipTo, typeof(GameObject), true);
             EditorGUILayout.EndHorizontal();
 
             if (_locationToEquipTo != null)
             {
-                GunBase[] locationChildren = _locationToEquipTo.GetComponentsInChildren<GunBase>();
-
-                if (locationChildren.Length > 0)
+                if (_locationToEquipTo.GetComponentInChildren<GunBase>())
                 {
-                    for (int i = 0; i < locationChildren.Length; i++)
+                    GunBase[] locationChildren = _locationToEquipTo.GetComponentsInChildren<GunBase>();
+
+                    if (locationChildren.Length > 0)
                     {
-                        DestroyImmediate(locationChildren[i].gameObject);
+                        for (int i = 0; i < locationChildren.Length; i++)
+                        {
+                            DestroyImmediate(locationChildren[i].gameObject);
+                        }
+                    }
+                }
+                else if (_locationToEquipTo.GetComponentInChildren<MagicBase>())
+                {
+                    MagicBase[] locationChildren = _locationToEquipTo.GetComponentsInChildren<MagicBase>();
+
+                    if (locationChildren.Length > 0)
+                    {
+                        for (int i = 0; i < locationChildren.Length; i++)
+                        {
+                            DestroyImmediate(locationChildren[i].gameObject);
+                        }
                     }
                 }
             }

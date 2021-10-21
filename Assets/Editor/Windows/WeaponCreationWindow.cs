@@ -127,18 +127,6 @@ public class WeaponCreationWindow : EditorWindow
         if (GUILayout.Button("Create New", GUILayout.Height(40)))
         {
             AssetDatabase.Refresh();
-
-            /*
-            switch (_weaponData._baseWeaponClass)
-            {
-                case BaseWeaponClass.GUN:
-                    GunSetupWindow.OpenGunSetupWindow();
-                    break;
-                case BaseWeaponClass.MAGIC:
-                    MagicSetupWindow.OpenMagicSetupWindow();
-                    break;
-            }
-            */
             CreationWindow.OpenCreationWindow();
         }
         EditorGUILayout.EndHorizontal();

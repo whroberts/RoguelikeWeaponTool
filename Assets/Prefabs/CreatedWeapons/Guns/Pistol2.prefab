@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: -3846306878717652307}
   - component: {fileID: 3394014965215430700}
   m_Layer: 7
-  m_Name: PistolBase
+  m_Name: Pistol2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -222,9 +222,6 @@ MonoBehaviour:
   GunDataSet: {fileID: 0}
   CurrentWeapon: {fileID: 0}
   _muzzleFlash: {fileID: 0}
-  _impactEffect: {fileID: 0}
-  _shotSound: {fileID: 0}
-  _hitSound: {fileID: 0}
   _muzzleLocation: {fileID: 1970876165506142599}
   _bullet: {fileID: 5636231992704264371, guid: 9eeb866576aac1345b6cc18e1760d7d6, type: 3}
 --- !u!1 &847216302895903327

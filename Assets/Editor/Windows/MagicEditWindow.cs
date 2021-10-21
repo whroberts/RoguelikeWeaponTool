@@ -73,26 +73,77 @@ public class MagicEditWindow : EditorWindow
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical();
+
+        GUILayout.Label("Mana");
+
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Name");
-        _unsavedMagicData._name = EditorGUILayout.TextField(_unsavedMagicData._name);
+        GUILayout.Label("Player Mana");
+        _unsavedMagicData._mana = EditorGUILayout.FloatField(_unsavedMagicData._mana);
         EditorGUILayout.EndHorizontal();
 
-        if (_unsavedMagicData._name == null)
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("% Mana Recharge / Second");
+        _unsavedMagicData._manaRechargeRate = EditorGUILayout.FloatField(_unsavedMagicData._manaRechargeRate);
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.Space(10);
+
+        EditorGUILayout.BeginVertical();
+        switch (_unsavedMagicData._baseMagicType)
         {
-            EditorGUILayout.HelpBox("Required [Name] missing", MessageType.Error);
-            _isSaveable = false;
-        }
-        else
-        {
-            _isSaveable = true;
+
+            case BaseMagicType.NULL:
+
+                EditorGUILayout.BeginHorizontal();
+                if (_unsavedMagicData._name == null)
+                {
+                    EditorGUILayout.HelpBox("Required [MagicType] missing", MessageType.Error);
+                    _isSaveable = false;
+                }
+                EditorGUILayout.EndHorizontal();
+
+                break;
+            case BaseMagicType.DAMAGE:
+                // draws the box for damage input
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Damage");
+                _unsavedMagicData._damageValue = EditorGUILayout.FloatField(_unsavedMagicData._damageValue);
+                EditorGUILayout.EndHorizontal();
+
+                break;
+            case BaseMagicType.HEAL:
+                // draws the box for healing value input
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Healing Amount");
+                _unsavedMagicData._healingValue = EditorGUILayout.FloatField(_unsavedMagicData._healingValue);
+                EditorGUILayout.EndHorizontal();
+
+                break;
         }
         EditorGUILayout.EndVertical();
 
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Damage");
-        _unsavedMagicData._damageValue = EditorGUILayout.FloatField(_unsavedMagicData._damageValue);
-        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.Space(10);
+
+        EditorGUILayout.BeginVertical();
+
+        switch (_unsavedMagicData._magicAbilityType)
+        {
+
+            case MagicAbilityType.CAST:
+
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Cast Projectile Speed");
+                _unsavedMagicData._castLaunchSpeed = EditorGUILayout.FloatField(_unsavedMagicData._castLaunchSpeed);
+                EditorGUILayout.EndHorizontal();
+
+                break;
+        }
+
+        EditorGUILayout.EndVertical();
 
         DrawButtons();
     }
@@ -141,7 +192,11 @@ public class MagicEditWindow : EditorWindow
         _unsavedMagicData._magicAbilityType = gunData._magicAbilityType;
         _unsavedMagicData._basePrefab = gunData._basePrefab;
         _unsavedMagicData._name = "tmp_" + gunData._name;
+        _unsavedMagicData._mana = gunData._mana;
         _unsavedMagicData._damageValue = gunData._damageValue;
+        _unsavedMagicData._healingValue = gunData._healingValue;
+        _unsavedMagicData._castLaunchSpeed = gunData._castLaunchSpeed;
+        _unsavedMagicData._coolDown = gunData._coolDown;
 
         AssetDatabase.CreateAsset(_unsavedMagicData, tempPath + _unsavedMagicData._name + ".asset");
 
@@ -160,39 +215,16 @@ public class MagicEditWindow : EditorWindow
         _savedMagicData._magicAbilityType = gunData._magicAbilityType;
         _savedMagicData._basePrefab = gunData._basePrefab;
         _savedMagicData._name = _originalName;
+        _savedMagicData._mana = gunData._mana;
         _savedMagicData._damageValue = gunData._damageValue;
+        _savedMagicData._healingValue = gunData._healingValue;
+        _savedMagicData._castLaunchSpeed = gunData._castLaunchSpeed;
+        _savedMagicData._coolDown = gunData._coolDown;
 
         AssetDatabase.CreateAsset(_savedMagicData, tempPath + _savedMagicData._name + ".asset");
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-    }
-
-    bool IsFileDirty()
-    {
-        bool dirty = false;
-
-        if (_unsavedMagicData._baseMagicType != _savedMagicData._baseMagicType)
-        {
-            dirty = true;
-        }
-
-        if (_unsavedMagicData._magicAbilityType != _savedMagicData._magicAbilityType)
-        {
-            dirty = true;
-        }
-
-        if (_unsavedMagicData._basePrefab != _savedMagicData._basePrefab)
-        {
-            dirty = true;
-        }
-
-        if (_unsavedMagicData._damageValue != _savedMagicData._damageValue)
-        {
-            dirty = true;
-        }
-
-        return dirty;
     }
 
     private void OnDestroy()

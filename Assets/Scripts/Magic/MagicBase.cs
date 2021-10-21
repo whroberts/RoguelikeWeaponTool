@@ -115,6 +115,7 @@ public abstract class MagicBase : MonoBehaviour
         StartCoroutine(LoseMana());
     }
 
+    /*
     IEnumerator ManaRecharger()
     {
         _magicDataSet._mana = Mathf.Clamp(_magicDataSet._mana, 0, 100);
@@ -165,10 +166,11 @@ public abstract class MagicBase : MonoBehaviour
         yield return new WaitForSeconds(1f);
         StartCoroutine(RateOverTimeIncrease(rate, time));
     }
+    */
 
     void CastMagic() 
     {
-        StopCoroutine(ManaRecharger());
+        //StopCoroutine(ManaRecharger());
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -178,7 +180,7 @@ public abstract class MagicBase : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
-            StartCoroutine(ManaRecharger());
+            //StartCoroutine(ManaRecharger());
             StartCoroutine(Cooldown());
 
         }
@@ -186,7 +188,7 @@ public abstract class MagicBase : MonoBehaviour
 
     void BeamMagic()
     {
-        StopCoroutine(ManaRecharger());
+        //StopCoroutine(ManaRecharger());
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -197,7 +199,7 @@ public abstract class MagicBase : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
             StopCoroutine(LoseMana());
-            StartCoroutine(ManaRecharger());
+            //StartCoroutine(ManaRecharger());
             StartCoroutine(Cooldown());
         }
     }
@@ -205,7 +207,7 @@ public abstract class MagicBase : MonoBehaviour
     IEnumerator Cooldown()
     {
         _onCooldown = true;
-        StartCoroutine(ManaRecharger());
+        //StartCoroutine(ManaRecharger());
         yield return new WaitForSeconds(_magicDataSet._coolDown);
         _onCooldown = false;
     }
